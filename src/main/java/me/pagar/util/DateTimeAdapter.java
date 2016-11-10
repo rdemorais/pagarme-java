@@ -5,7 +5,6 @@ import com.google.gson.*;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 import java.lang.reflect.Type;
 
@@ -17,7 +16,6 @@ public class DateTimeAdapter  implements JsonDeserializer<DateTime>, JsonSeriali
         this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
     }
 
-    @Override
     public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final String dateTime = json.getAsString();
         try {
@@ -27,7 +25,6 @@ public class DateTimeAdapter  implements JsonDeserializer<DateTime>, JsonSeriali
         }
     }
 
-    @Override
     public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) {
         return src == null ? null : new JsonPrimitive(formatter.print(src));
     }
