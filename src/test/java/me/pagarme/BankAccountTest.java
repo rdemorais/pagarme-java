@@ -85,7 +85,6 @@ public class BankAccountTest extends BaseTest{
                 Assert.assertEquals(bankAccountVar.getDocumentNumber(), BankAccountFactory.DEFAULT_DOCUMENT_NUMBER);
                 Assert.assertEquals(bankAccountVar.getLegalName(), BankAccountFactory.DEFAULT_LEGAL_NAME);
             }
-            
         } catch (Exception exception) {
             throw new UnsupportedOperationException(exception);
         }
