@@ -2,7 +2,6 @@ package me.pagar.model;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.HttpMethod;
@@ -17,7 +16,6 @@ import com.google.gson.reflect.TypeToken;
 
 import me.pagar.model.Transaction.PaymentMethod;
 import me.pagar.util.JSONUtils;
-
 
 public class Payable extends PagarMeModel<Integer> {
 
@@ -47,31 +45,31 @@ public class Payable extends PagarMeModel<Integer> {
 
     @Expose(serialize = false)
     private Type type;
-    
+
     @Expose
     @SerializedName("recipient_id")
     private String recipientId;
-    
+
     @Expose
     @SerializedName("anticipation_fee")
     private String anticipationFee;
-    
+
     @Expose
     @SerializedName("bulk_anticipation_id")
     private String bulkAnticipationId;
-    
+
     @Expose
     @SerializedName("original_payment_date")
     private Date originalPaymentDate;
-    
+
     @Expose
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;
-    
+
     public Payable() {
-		super();
-	}
-    
+        super();
+    }
+
     public Payable find(Integer id) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, String.format("/%s/%s", getClassName(), id));
@@ -82,55 +80,49 @@ public class Payable extends PagarMeModel<Integer> {
 
         return other;
     }
-    
+
     public Collection<Payable> findCollection(final Integer totalPerPage, Integer page) throws PagarMeException {
-    	return findCollection(totalPerPage, page, null);
+        return findCollection(totalPerPage, page, null);
     }
-    
-    public Collection<Payable> findCollection(final Integer totalPerPage, Integer page, final Map<String, Object> filters) 
-    		throws PagarMeException {
-    	String path = String.format("/%s", getClassName());
-    	return _findCollection(path, totalPerPage, page, filters);
+
+    public Collection<Payable> findCollection(final Integer totalPerPage, Integer page,
+            final Map<String, Object> filters) throws PagarMeException {
+        String path = String.format("/%s", getClassName());
+        return findCollection(path, totalPerPage, page, filters);
     }
-    
-    public Collection<Payable> findCollection(Transaction transaction, final Integer totalPerPage, Integer page) 
-    		throws PagarMeException {
-    	String path = String.format("/%s/%s/%s", transaction.getClassName() , transaction.getId(), getClassName());
-    	return _findCollection(path, totalPerPage, page, null);
+
+    public Collection<Payable> findCollection(Transaction transaction, final Integer totalPerPage, Integer page)
+            throws PagarMeException {
+        String path = String.format("/%s/%s/%s", transaction.getClassName(), transaction.getId(), getClassName());
+        return findCollection(path, totalPerPage, page, null);
     }
-    
-    private Collection<Payable> _findCollection(String path, final Integer totalPerPage, Integer page, final Map<String, Object> filters) 
-    		throws PagarMeException {
-    	final Map<String, Object> parameters = new HashMap<String, Object>();
 
-        if (null != totalPerPage && 0 != totalPerPage) {
-            parameters.put("count", totalPerPage);
-        }
+    private Collection<Payable> findCollection(String path, final Integer totalPerPage, Integer page,
+            final Map<String, Object> filters) throws PagarMeException {
 
-        if (null == page || 0 >= page) {
-            page = 1;
-        }
+        JsonArray payables = paginate(path, totalPerPage, page, filters);
 
-        parameters.put("page", page);
-
-        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
-        
-        request.getParameters().putAll(parameters);
-        
-        if(filters != null) {
-        	request.getParameters().putAll(filters);
-        }
-
-        JsonArray payables= request.execute();
-        
         return JSONUtils.getAsList(payables, new TypeToken<Collection<Payable>>() {
         }.getType());
     }
-    
+
     private void copy(Payable other) {
-    	
+        setId(other.getId());
+        this.amount = other.amount;
+        this.anticipationFee = other.anticipationFee;
+        this.bulkAnticipationId = other.bulkAnticipationId;
+        this.fee = other.fee;
+        this.installment = other.installment;
+        this.originalPaymentDate = other.originalPaymentDate;
+        this.payment = other.payment;
+        this.paymentMethod = other.paymentMethod;
+        this.recipientId = other.recipientId;
+        this.splitRuleId = other.splitRuleId;
+        this.status = other.status;
+        this.transactionId = other.transactionId;
+        this.type = other.type;
     }
-    
+
     public Integer getAmount() {
         return amount;
     }
@@ -162,30 +154,25 @@ public class Payable extends PagarMeModel<Integer> {
     public Type getType() {
         return type;
     }
-    
+
     public String getRecipientId() {
-		return recipientId;
-	}
+        return recipientId;
+    }
 
-	public String getAnticipationFee() {
-		return anticipationFee;
-	}
+    public String getAnticipationFee() {
+        return anticipationFee;
+    }
 
-	public String getBulkAnticipationId() {
-		return bulkAnticipationId;
-	}
+    public String getBulkAnticipationId() {
+        return bulkAnticipationId;
+    }
 
-	public Date getOriginalPaymentDate() {
-		return originalPaymentDate;
-	}
+    public Date getOriginalPaymentDate() {
+        return originalPaymentDate;
+    }
 
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	@Override
-    public void setId(Integer id) {
-        throw new UnsupportedOperationException("Not allowed.");
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
     }
 
     @Override
