@@ -17,12 +17,14 @@ import me.pagar.model.SplitRule;
 import me.pagar.model.Transaction;
 import me.pagar.model.Transaction.PaymentMethod;
 import me.pagarme.factory.RecipientFactory;
+import me.pagarme.factory.TransactionFactory;
 
 public class PayableTest extends BaseTest {
 
     private Payable payable;
 
     private RecipientFactory recipientFactory = new RecipientFactory();
+    private TransactionFactory transactionFactory = new TransactionFactory();
 
     @Before
     public void setUp() {
@@ -33,7 +35,7 @@ public class PayableTest extends BaseTest {
 
     @Test
     public void testRetrieveTransactionPayables() throws Throwable {
-        transaction = this.transactionCreditCardCommon();
+        transaction = transactionFactory.createCreditCardOnlineTransaction();
         transaction.save();
         Collection<Payable> payables = payable.findCollection(transaction, 10, 1);
 
@@ -42,7 +44,7 @@ public class PayableTest extends BaseTest {
 
     @Test
     public void testRetrieveTransactionPayableFields() throws Throwable {
-        transaction = this.transactionCreditCardCommon();
+        transaction = transactionFactory.createCreditCardOnlineTransaction();
         transaction.save();
 
         Collection<Payable> payables = payable.findCollection(transaction, 10, 1);
@@ -54,7 +56,7 @@ public class PayableTest extends BaseTest {
         Assert.assertEquals(100, (int) payable.getAmount());
         Assert.assertEquals(5, (int) payable.getFee());
         Assert.assertEquals(1, (int) payable.getInstallment());
-        Assert.assertEquals(PaymentMethod.CREDIT_CARD, payable.getPaymentMethod());
+        Assert.assertEquals(PaymentMethod.DEBIT_CARD, payable.getPaymentMethod());
         Assert.assertNotNull(payable.getTransactionId());
         Assert.assertNotNull(payable.getPayment());
         Assert.assertEquals(Status.WAITING_FUNDS, payable.getStatus());
@@ -65,7 +67,7 @@ public class PayableTest extends BaseTest {
 
     @Test
     public void testRetrieveTransactionPayable() throws Throwable {
-        transaction = this.transactionCreditCardCommon();
+        transaction = transactionFactory.createCreditCardOnlineTransaction();
         transaction.save();
         Collection<Payable> payables = payable.findCollection(transaction, 10, 1);
 
@@ -80,7 +82,7 @@ public class PayableTest extends BaseTest {
 
     @Test
     public void testRetrievePayableWithFilters() throws Throwable {
-        transaction = this.transactionCreditCardCommon();
+        transaction = transactionFactory.createCreditCardOnlineTransaction();
         transaction.setCapture(true);
         transaction.setAmount(10000);
 

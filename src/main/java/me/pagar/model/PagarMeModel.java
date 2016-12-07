@@ -136,7 +136,7 @@ public abstract class PagarMeModel<PK extends Serializable> {
         return request.execute();
     }
 
-    protected <T extends PagarMeModel> T save(final Class<T> clazz) throws PagarMeException {
+    protected <T extends PagarMeModel<PK>> T save(final Class<T> clazz) throws PagarMeException {
 
         if (!validate()) {
             return null;
@@ -164,6 +164,11 @@ public abstract class PagarMeModel<PK extends Serializable> {
 
     protected void flush() {
         dirtyProperties.clear();
+    }
+    
+    protected <T extends PagarMeModel<PK>> void copy(T other){
+        this.id = other.getId();
+        this.createdAt = other.getCreatedAt();
     }
 
     protected boolean validate() {
